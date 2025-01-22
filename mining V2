@@ -33,7 +33,7 @@ function getPos()
    return posVar
 end
 function putPos(posVar)
-    def = {288,109,53,"east"}
+    def = {44 106 -15,"east"}
     posVar = posVar or def
     file = fs.open(filePath,"w")
     posVar = textutils.serialize(posVar)
