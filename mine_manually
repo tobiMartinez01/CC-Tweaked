@@ -1,5 +1,7 @@
 --## Manually set turtle
-rednet.open("right")
+pcall(function()
+    rednet.open("right")
+end)()
 local function toboolean(string)
     if string == "true" then
         return true
