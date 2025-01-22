@@ -1,1 +1,7 @@
 local module = {}
+
+function module.write(string)
+    term.write(string)
+end
+
+return module
