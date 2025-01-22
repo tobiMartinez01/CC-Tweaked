@@ -1,3 +1,4 @@
+--## Manually set turtle
 rednet.open("right")
 local function toboolean(string)
     if string == "true" then
