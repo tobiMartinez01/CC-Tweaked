@@ -1,0 +1,102 @@
+rednet.open("right")
+local function toboolean(string)
+    if string == "true" then
+        return true
+    end
+    if string == "false" then
+        return false
+    end
+end
+local array = {...}
+local allowed = {
+    ['minecraft:redstone'] = true,
+    ['minecraft:coal'] = true, 
+    ['minecraft:diamond'] = true, 
+    ['minecraft:raw_iron'] = true, 
+    ['minecraft:raw_gold'] = true, 
+    ['minecraft:raw_copper'] = true, 
+    ['minecraft:emerald'] = true, 
+    ['create:raw_zinc'] = true, 
+    ['create_dd:raw_tin'] = true
+}
+local enabled = toboolean(array[1])
+local times = tonumber(array[2])
+local totalslots = 16
+local function forward()
+    while not turtle.forward() do
+        turtle.dig("left")
+    end
+end
+local function digUp()
+    turtle.digUp("left")
+end
+local function digDown()
+    turtle.digDown("left")
+end
+local function digBoth()
+    digUp()
+    digDown()
+end
+-- Looping (Never ending)
+local function final_run()
+    local function run()
+        local current_index = 0
+        local fullslots = 0
+        while current_index < times do
+            for i = 1, totalslots do
+                local details = turtle.getItemDetail(i, true)
+                if details then
+                    if allowed[details.name] ~= true then
+                        local slot = turtle.select(i)
+                        turtle.drop(turtle.getItemCount(i))
+                    end
+                end
+            end
+            for i = 1, totalslots do
+                if turtle.getItemCount(i) == 64 then
+                    fullslots = fullslots + 1
+                end
+            end
+            if fullslots == totalslots then
+                print("full")
+                signal = false
+                break
+            end
+
+            if enabled == true then
+                forward()
+                digBoth()
+                turtle.turnLeft()
+                forward()
+                digBoth()
+                turtle.turnRight()
+                turtle.turnRight()
+                forward()
+                forward()
+                digBoth()
+                turtle.turnLeft()
+                turtle.turnLeft()
+                forward()
+                turtle.turnRight()
+            else
+                break
+            end
+            current_index = current_index + 1
+        end
+    end
+
+    -- If signal == false then this function will be done
+    local function getSignal()
+        repeat
+            local com, signal, pro = rednet.receive('mining')
+        until signal == false
+    end
+
+    -- If one of the function is done then close all
+    -- When getSignal is done, it also close the loop and any other functions
+    -- Live-updating signal while the loop still doing it's job depending on signal value
+    parallel.waitForAny(run, getSignal)
+    print("Stopped")
+    -- Waiting for input to run again
+end
+final_run()
