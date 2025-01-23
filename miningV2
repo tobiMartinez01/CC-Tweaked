@@ -287,19 +287,56 @@ local function toboolean(string)
     end
 end
 
+local function sortinventory()
+    local slot = 1
+    turtle.select(slot)
+    while true do
+        if slot < totalslots then
+            --Check if slot isnt empty
+            if turtle.getItemDetail(slot) ~= nil then
+                if turtle.getItemCount(slot) == 64 then
+                    slot = slot + 1
+                else
+                    for i = slot + 1, totalslots do
+                        if turtle.getItemDetail(i) ~= nil then
+                            if turtle.getItemDetail(slot).name == turtle.getItemDetail(i).name then
+                                turtle.select(i)
+                                turtle.transferTo(slot)
+                                turtle.select(slot)
+                                if turtle.getItemCount(slot) == 64 then
+                                    break
+                                end
+                            end
+                        end
+                    end
+                    slot = slot + 1
+                end
+            else
+                for i = slot + 1, totalslots do
+                    if turtle.getItemDetail(i) ~= nil then
+                        turtle.select(i)
+                        turtle.transferTo(slot)
+                        turtle.select(slot)
+                        if turtle.getItemCount(slot) == 64 then
+                            break
+                        end
+                    end
+                end
+                slot = slot + 1
+            end
+        else
+            break
+        end
+    end
+end
+
 local totalslots = 16
 
 goTo()
 
 while true do
     local fullslots = 0
-    for i = 1, totalslots do
-        local count = turtle.getItemCount(i)
-        -- print('Slot ', i, ' has ', count, ' items')
-        if count == 64 then
-            fullslots = fullslots + 1
-        end
-    end
+    sortinventory()
     for i = 1, totalslots do
         local details = turtle.getItemDetail(i, true)
         if details then
@@ -307,6 +344,13 @@ while true do
                 turtle.select(i)
                 turtle.drop(turtle.getItemCount(i))
             end
+        end
+    end
+    for i = 1, totalslots do
+        local count = turtle.getItemCount(i)
+        -- print('Slot ', i, ' has ', count, ' items')
+        if count == 64 then
+            fullslots = fullslots + 1
         end
     end
     print('Full slots: ', fullslots)
