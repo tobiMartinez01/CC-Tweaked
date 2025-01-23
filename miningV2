@@ -10,12 +10,7 @@ local z = position[3]
 local facing = position[4]
 
 --## Reformat facing
-local facings = {
-    ['north'] = 'n',
-    ['east'] = 'e',
-    ['south'] = 's',
-    ['west'] = 'w'
-}
+local facings = { 'n', 'e', 's', 'w' }
 
 --## Getting/Restoring positions
 if x and y and z and facing then
@@ -55,17 +50,61 @@ y = tonumber(y)
 z = tonumber(z)
 
 --## Goto
+local x_dest = tonumber(position[5])
+local y_dest = tonumber(position[6])
+local z_dest = tonumber(position[7])
+
 local forward = turtle.forward
 local back = turtle.back
 local left = turtle.turnLeft
 local right = turtle.turnRight
 
-local function goToX(dest)
-    if x > dest then
-        while facing ~= 'w' do
-            facing = next(facings, facings[facing])
-            right()
+local function index(array, value)
+    for i = 1, #array do
+        if value == array[i] then
+            return i
         end
     end
 end
 
+local function turnLeft()
+    facing = facings[(index(facings, facing) - 2) % #facings + 1]
+    left()
+end
+
+local function turnRight()
+    facing = facings[(index(facings, facing) % #facings) + 1]
+    right()
+end
+
+local function goToX(dest)
+    if x > dest then
+        while facing ~= 'w' do
+            if facing == 'n' then
+                turnLeft()
+            else
+                turnRight()
+            end
+        end
+        while x > dest do
+            x = x - 1
+            forward()
+        end
+    end
+
+    if x < dest then
+        while facing ~= 'e' do
+            if facing == 's' then
+                turnLeft()
+            else
+                turnRight()
+            end
+        end
+        while x < dest do
+            x = x + 1
+            forward()
+        end
+    end
+end
+
+goToX(x_dest)
