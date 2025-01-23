@@ -287,6 +287,8 @@ local function toboolean(string)
     end
 end
 
+local totalslots = 16
+
 local function sortinventory()
     local slot = 1
     turtle.select(slot)
@@ -329,8 +331,6 @@ local function sortinventory()
         end
     end
 end
-
-local totalslots = 16
 
 goTo()
 
