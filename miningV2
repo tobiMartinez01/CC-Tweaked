@@ -1,6 +1,6 @@
 --## INSTRUCTION ##--
 --[[
-    Create 3 files named accordingly to "x.txt", "y.txt", "z.txt"
+    Create 3 files named accordingly to "x.txt", "y.txt", "z.txt", "facing.txt"
 ]]
 
 local position = { ... }
@@ -13,13 +13,13 @@ local facing = position[4]
 local facings = { 'n', 'e', 's', 'w' }
 
 --## Getting/Restoring positions
-if x and y and z and facing then
+if tonumber(x) and tonumber(y) and tonumber(z) and facing then
     print('New position!')
     --Overriding old saves
-    local x_file = fs.open('x.txt', 'w+')
-    local y_file = fs.open('y.txt', 'w+')
-    local z_file = fs.open('z.txt', 'w+')
-    local facing_file = fs.open('facing.txt', 'w+')
+    local x_file = fs.open('old_x.txt', 'w+')
+    local y_file = fs.open('old_y.txt', 'w+')
+    local z_file = fs.open('old_z.txt', 'w+')
+    local facing_file = fs.open('old_facing.txt', 'w+')
 
     x_file.write(x)
     y_file.write(y)
@@ -31,12 +31,12 @@ if x and y and z and facing then
     z_file.close()
     facing_file.close()
 else
-    print('Restoring last position!')
-    local old_x = fs.find('x.txt')
-    local old_y = fs.find('y.txt')
-    local old_z = fs.find('z.txt')
-    local old_facing = fs.find('facing.txt')
-    if old_x and old_y and old_z then
+    print('Restoring current position!')
+    local current_x = fs.find('x.txt')
+    local current_y = fs.find('y.txt')
+    local current_z = fs.find('z.txt')
+    local current_facing = fs.find('facing.txt')
+    if current_x and current_y and current_z and current_facing then
         x = fs.open('x.txt', 'r').readAll()
         y = fs.open('y.txt', 'r').readAll()
         z = fs.open('z.txt', 'r').readAll()
@@ -48,6 +48,7 @@ end
 x = tonumber(x)
 y = tonumber(y)
 z = tonumber(z)
+print(x, y, z, facing)
 
 --## Goto
 local x_dest = tonumber(position[5])
@@ -77,7 +78,14 @@ local function turnRight()
     right()
 end
 
-local function goToX(dest)
+function goToX(dest)
+    --## Save x
+    local old_x_file = fs.open('old_x.txt', 'w+')
+    old_x_file.write(x)
+    old_x_file.close()
+    local old_facing_file = fs.open('old_facing.txt', 'w+')
+    old_facing_file.write(facing)
+    old_facing_file.close()
     if x > dest then
         while facing ~= 'w' do
             if facing == 'n' then
@@ -105,6 +113,89 @@ local function goToX(dest)
             forward()
         end
     end
+    --## Save x
+    local x_file = fs.open('x.txt', 'w+')
+    x_file.write(x)
+    x_file.close()
+    local facing_file = fs.open('facing.txt', 'w+')
+    facing_file.write(facing)
+    facing_file.close()
+end
+
+function goToY(dest)
+    --## Save y
+    local old_y_file = fs.open('old_y.txt', 'w+')
+    old_y_file.write(y)
+    old_y_file.close()
+    local old_facing_file = fs.open('old_facing.txt', 'w+')
+    old_facing_file.write(facing)
+    old_facing_file.close()
+    if y > dest then
+        while y > dest do
+            y = y - 1
+            turtle.down()
+        end
+    end
+
+    if y < dest then
+        while y < dest do
+            y = y + 1
+            turtle.up()
+        end
+    end
+    --## Save y
+    local y_file = fs.open('y.txt', 'w+')
+    y_file.write(y)
+    y_file.close()
+    local facing_file = fs.open('facing.txt', 'w+')
+    facing_file.write(facing)
+    facing_file.close()
+end
+
+function goToZ(dest)
+    --## Save z
+    local old_z_file = fs.open('old_z.txt', 'w+')
+    old_z_file.write(z)
+    old_z_file.close()
+    local old_facing_file = fs.open('old_facing.txt', 'w+')
+    old_facing_file.write(facing)
+    old_facing_file.close()
+    if z > dest then
+        while facing ~= 'n' do
+            if facing == 'e' then
+                turnLeft()
+            else
+                turnRight()
+            end
+        end
+        while z > dest do
+            z = z - 1
+            forward()
+        end
+    end
+
+    if z < dest then
+        while facing ~= 's' do
+            if facing == 'w' then
+                turnLeft()
+            else
+                turnRight()
+            end
+        end
+        while z < dest do
+            z = z + 1
+            forward()
+        end
+    end
+    --## Save z
+    local z_file = fs.open('z.txt', 'w+')
+    z_file.write(z)
+    z_file.close()
+    local facing_file = fs.open('facing.txt', 'w+')
+    facing_file.write(facing)
+    facing_file.close()
 end
 
 goToX(x_dest)
+goToZ(z_dest)
+goToY(y_dest)
