@@ -3,8 +3,10 @@
     Create 3 files named accordingly to "x.txt", "y.txt", "z.txt"
 ]]
 
-local x, y, z = { ... }
-print(x, y, z)
+local position = { ... }
+local x = position[1]
+local y = position[2]
+local z = position[3]
 if x and y and z then
     print(x, y, z)
 else
