@@ -1,6 +1,7 @@
 --## INSTRUCTION ##--
 --[[
-    Create 3 files named accordingly to "x.txt", "y.txt", "z.txt", "facing.txt"
+    Create 3 files named accordingly to "x.txt", "y.txt", "z.txt", "facing.txt",
+    "old_x.txt", "old_y.txt", "old_z.txt", "old_facing.txt"
 ]]
 
 local position = { ... }
