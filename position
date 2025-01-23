@@ -115,7 +115,7 @@ local function goToX(dest)
     end
     --## Save x
     local x_file = fs.open('x.txt', 'w+')
-    x_file.write(x)
+    x_file.write(dest)
     x_file.close()
     local facing_file = fs.open('facing.txt', 'w+')
     facing_file.write(facing)
@@ -142,7 +142,7 @@ local function goToY(dest)
     end
     --## Save y
     local y_file = fs.open('y.txt', 'w+')
-    y_file.write(y)
+    y_file.write(dest)
     y_file.close()
     local facing_file = fs.open('facing.txt', 'w+')
     facing_file.write(facing)
@@ -183,7 +183,7 @@ local function goToZ(dest)
     end
     --## Save z
     local z_file = fs.open('z.txt', 'w+')
-    z_file.write(z)
+    z_file.write(dest)
     z_file.close()
     local facing_file = fs.open('facing.txt', 'w+')
     facing_file.write(facing)
