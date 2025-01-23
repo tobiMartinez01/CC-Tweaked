@@ -7,8 +7,52 @@ local position = { ... }
 local x = position[1]
 local y = position[2]
 local z = position[3]
+local facing = position[4]
+
+--## Reformat facing
+local facings = {
+    ['north'] = 'n',
+    ['east'] = 'e',
+    ['south'] = 's',
+    ['west'] = 'w'
+}
+
+--## Getting/Restoring positions
 if x and y and z then
-    print(x, y, z)
+    print('New position!')
+    --Overriding old saves
+    local x_file = fs.open('x.txt', 'w+')
+    local y_file = fs.open('y.txt', 'w+')
+    local z_file = fs.open('z.txt', 'w+')
+    local facing_file = fs.open('facing.txt', 'w+')
+
+    x_file.write(x)
+    y_file.write(y)
+    z_file.write(z)
+    facing_file.write(facing)
+
+    x_file.close()
+    y_file.close()
+    z_file.close()
+    facing_file.close()
 else
-    print('Restoring last position')
+    print('Restoring last position!')
+    local old_x = find('x.txt')
+    local old_y = find('y.txt')
+    local old_z = find('z.txt')
+    local old_facing = find('facing.txt')
+    if old_x and old_y and old_z then
+        x = old_x
+        y = old_y
+        z = old_z
+        facing = old_facing
+    end
 end
+
+--## Convert to numbers
+x = tonumber(x)
+y = tonumber(y)
+z = tonumber(z)
+
+print(x, y, z)
+
