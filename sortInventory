@@ -1,0 +1,13 @@
+local totalslots = 16
+local function sortinventory()
+    local slot = 1
+    turtle.select(slot)
+    while turtle.getItemCount(slot) == 64 do
+        if slot + 1 > totalslots then
+            slot = slot + 1
+            turtle.select(slot)
+            break
+        end
+    end
+    print(slot)
+end
