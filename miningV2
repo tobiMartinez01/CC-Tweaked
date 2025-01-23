@@ -18,7 +18,7 @@ local facings = {
 }
 
 --## Getting/Restoring positions
-if x and y and z then
+if x and y and z and facing then
     print('New position!')
     --Overriding old saves
     local x_file = fs.open('x.txt', 'w+')
@@ -42,10 +42,10 @@ else
     local old_z = fs.find('z.txt')
     local old_facing = fs.find('facing.txt')
     if old_x and old_y and old_z then
-        x = old_x
-        y = old_y
-        z = old_z
-        facing = old_facing
+        x = fs.open('x.txt'. 'r').readAll()
+        y = fs.open('y.txt'. 'r').readAll()
+        z = fs.open('z.txt'. 'r').readAll()
+        facing = fs.open('facing.txt'. 'r').readAll()
     end
 end
 
@@ -54,5 +54,5 @@ x = tonumber(x)
 y = tonumber(y)
 z = tonumber(z)
 
-print(x, y, z)
+print(x, y, z, facing)
 
