@@ -2,12 +2,43 @@ local totalslots = 16
 local function sortinventory()
     local slot = 1
     turtle.select(slot)
-    while turtle.getItemCount(slot) == 64 do
-        if slot + 1 > totalslots then
-            slot = slot + 1
-            turtle.select(slot)
+    while true do
+        if slot < totalslots then
+            --Check if slot isnt empty
+            if turtle.getItemDetail(slot) ~= nil then
+                if turtle.getItemCount(slot) == 64 then
+                    slot = slot + 1
+                else
+                    for i = slot + 1, totalslots do
+                        if turtle.getItemDetail(i) ~= nil then
+                            if turtle.getItemDetail(slot).name == turtle.getItemDetail(i).name then
+                                turtle.select(i)
+                                turtle.transferTo(slot)
+                                turtle.select(slot)
+                                if turtle.getItemCount(slot) == 64 then
+                                    break
+                                end
+                            end
+                        end
+                    end
+                    slot = slot + 1
+                end
+            else
+                for i = slot + 1, totalslots do
+                    if turtle.getItemDetail(i) ~= nil then
+                        turtle.select(i)
+                        turtle.transferTo(slot)
+                        turtle.select(slot)
+                        if turtle.getItemCount(slot) == 64 then
+                            break
+                        end
+                    end
+                end
+                slot = slot + 1
+            end
+        else
             break
         end
     end
-    print(slot)
 end
+sortinventory()
