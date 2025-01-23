@@ -1,0 +1,11 @@
+--## INSTRUCTION ##--
+--[[
+    Create 3 files named accordingly to "x.txt", "y.txt", "z.txt"
+]]
+
+local x, y, z = { ... }
+if x and y and z then
+    print(x, y, z)
+else
+    print('Restoring last position')
+end
