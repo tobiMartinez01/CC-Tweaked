@@ -210,11 +210,18 @@ local function goBack()
     x_dest = tonumber(fs.open('old_x.txt', 'r').readAll())
     y_dest = tonumber(fs.open('old_y.txt', 'r').readAll())
     z_dest = tonumber(fs.open('old_z.txt', 'r').readAll())
+    local facing_dest = fs.open('old_facing.txt', 'r').readAll()
+    old_facing_save()
+    print('Arriving at original position: ', x_dest, y_dest, z_dest, facing_dest)
     goToX(x_dest)
     goToZ(z_dest)
     goToY(y_dest)
-    while facing ~= fs.open('old_facing.txt', 'r').readAll() do
+    while facing ~= facing_dest do
         turnLeft()
     end
-    print('Arrived at original position: ', x_dest, y_dest, z_dest, facing)
 end
+
+goTo()
+goBack()
+goBack()
+goBack()
