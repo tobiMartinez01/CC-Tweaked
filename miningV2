@@ -1,0 +1,352 @@
+--## INSTRUCTION ##--
+--[[
+    Create 3 files named accordingly to "x.txt", "y.txt", "z.txt", "facing.txt",
+    "old_x.txt", "old_y.txt", "old_z.txt", "old_facing.txt"
+
+    x,y,z is original position
+    x_dest, y_dest, z_dest is destination position
+]]
+
+local position = { ... }
+local x = position[1]
+local y = position[2]
+local z = position[3]
+local facing = position[4]
+
+--## Reformat facing
+local facings = { 'n', 'e', 's', 'w' }
+
+--## Getting/Restoring positions
+if tonumber(x) and tonumber(y) and tonumber(z) and facing then
+    -- print('New position!')
+    --Overriding old saves
+    local x_file = fs.open('old_x.txt', 'w+')
+    local y_file = fs.open('old_y.txt', 'w+')
+    local z_file = fs.open('old_z.txt', 'w+')
+    local facing_file = fs.open('old_facing.txt', 'w+')
+
+    x_file.write(x)
+    y_file.write(y)
+    z_file.write(z)
+    facing_file.write(facing)
+
+    x_file.close()
+    y_file.close()
+    z_file.close()
+    facing_file.close()
+else
+    -- print('Restoring current position!')
+    local current_x = fs.find('x.txt')
+    local current_y = fs.find('y.txt')
+    local current_z = fs.find('z.txt')
+    local current_facing = fs.find('facing.txt')
+    if current_x and current_y and current_z and current_facing then
+        x = fs.open('x.txt', 'r').readAll()
+        y = fs.open('y.txt', 'r').readAll()
+        z = fs.open('z.txt', 'r').readAll()
+        facing = fs.open('facing.txt', 'r').readAll()
+    end
+end
+
+--## Convert to numbers
+x = tonumber(x)
+y = tonumber(y)
+z = tonumber(z)
+
+--## Goto
+local x_dest = tonumber(position[5])
+local y_dest = tonumber(position[6])
+local z_dest = tonumber(position[7])
+
+if not x_dest or not y_dest or not z_dest then
+    x_dest = x
+    y_dest = y
+    z_dest = z
+end
+
+local forward = turtle.forward
+local back = turtle.back
+local left = turtle.turnLeft
+local right = turtle.turnRight
+
+local function index(array, value)
+    for i = 1, #array do
+        if value == array[i] then
+            return i
+        end
+    end
+end
+
+local function turnLeft()
+    facing = facings[(index(facings, facing) - 2) % #facings + 1]
+    left()
+end
+
+local function turnRight()
+    facing = facings[(index(facings, facing) % #facings) + 1]
+    right()
+end
+
+local function goToX(dest)
+    --## Save x
+    local old_x_file = fs.open('old_x.txt', 'w+')
+    old_x_file.write(x)
+    old_x_file.close()
+    if x > dest then
+        while facing ~= 'w' do
+            if facing == 'n' then
+                turnLeft()
+            else
+                turnRight()
+            end
+        end
+        while x > dest do
+            x = x - 1
+            forward()
+        end
+    end
+
+    if x < dest then
+        while facing ~= 'e' do
+            if facing == 's' then
+                turnLeft()
+            else
+                turnRight()
+            end
+        end
+        while x < dest do
+            x = x + 1
+            forward()
+        end
+    end
+    --## Save x
+    local x_file = fs.open('x.txt', 'w+')
+    x_file.write(dest)
+    x_file.close()
+    local facing_file = fs.open('facing.txt', 'w+')
+    facing_file.write(facing)
+    facing_file.close()
+end
+
+local function goToY(dest)
+    --## Save y
+    local old_y_file = fs.open('old_y.txt', 'w+')
+    old_y_file.write(y)
+    old_y_file.close()
+    if y > dest then
+        while y > dest do
+            y = y - 1
+            turtle.down()
+        end
+    end
+
+    if y < dest then
+        while y < dest do
+            y = y + 1
+            turtle.up()
+        end
+    end
+    --## Save y
+    local y_file = fs.open('y.txt', 'w+')
+    y_file.write(dest)
+    y_file.close()
+    local facing_file = fs.open('facing.txt', 'w+')
+    facing_file.write(facing)
+    facing_file.close()
+end
+
+local function goToZ(dest)
+    --## Save z
+    local old_z_file = fs.open('old_z.txt', 'w+')
+    old_z_file.write(z)
+    old_z_file.close()
+    if z > dest then
+        while facing ~= 'n' do
+            if facing == 'e' then
+                turnLeft()
+            else
+                turnRight()
+            end
+        end
+        while z > dest do
+            z = z - 1
+            forward()
+        end
+    end
+
+    if z < dest then
+        while facing ~= 's' do
+            if facing == 'w' then
+                turnLeft()
+            else
+                turnRight()
+            end
+        end
+        while z < dest do
+            z = z + 1
+            forward()
+        end
+    end
+    --## Save z
+    local z_file = fs.open('z.txt', 'w+')
+    z_file.write(dest)
+    z_file.close()
+    local facing_file = fs.open('facing.txt', 'w+')
+    facing_file.write(facing)
+    facing_file.close()
+end
+
+local function old_facing_save()
+    local old_facing_file = fs.open('old_facing.txt', 'w+')
+    old_facing_file.write(facing)
+    old_facing_file.close()
+end
+
+local function goTo()
+    old_facing_save()
+    goToX(x_dest)
+    goToZ(z_dest)
+    goToY(y_dest)
+end
+
+local function goBack()
+    x = tonumber(fs.open('x.txt', 'r').readAll())
+    y = tonumber(fs.open('y.txt', 'r').readAll())
+    z = tonumber(fs.open('z.txt', 'r').readAll())
+    x_dest = tonumber(fs.open('old_x.txt', 'r').readAll())
+    y_dest = tonumber(fs.open('old_y.txt', 'r').readAll())
+    z_dest = tonumber(fs.open('old_z.txt', 'r').readAll())
+    local facing_dest = fs.open('old_facing.txt', 'r').readAll()
+    -- print('Saved: ', x, y, z, facing)
+    old_facing_save()
+    -- print('Going back to: ', x_dest, y_dest, z_dest, facing_dest)
+    goToX(x_dest)
+    goToZ(z_dest)
+    goToY(y_dest)
+    while facing ~= facing_dest do
+        turnLeft()
+    end
+end
+
+local function digForward()
+    while not turtle.forward() do
+        turtle.dig()
+    end
+end
+
+local function digLeft()
+    turnLeft()
+    digForward()
+    turnRight()
+end
+
+local function digRight()
+    turnRight()
+    digForward()
+    turnLeft()
+end
+
+local function digUpAndDown()
+    turtle.digUp()
+    turtle.digDown()
+end
+
+local function digPattern()
+    --Dig 3x3 pattern
+    digForward()
+    digUpAndDown()
+    digLeft()
+    digUpAndDown()
+    digRight()
+    digRight()
+    digUpAndDown()
+    digLeft()
+end
+
+local function toboolean(string)
+    if string == "true" then
+        return true
+    end
+    if string == "false" then
+        return false
+    end
+end
+
+local allowed = {
+    ['minecraft:cobblestone'] = true,
+    ['minecraft:redstone'] = true,
+    ['minecraft:coal'] = true,
+    ['minecraft:diamond'] = true,
+    ['minecraft:raw_iron'] = true,
+    ['minecraft:raw_gold'] = true,
+    ['minecraft:raw_copper'] = true,
+    ['minecraft:emerald'] = true,
+    ['create:raw_zinc'] = true,
+    ['create_dd:raw_tin'] = true
+}
+
+local totalslots = 16
+
+goTo()
+
+while true do
+    local fullslots = 0
+    for i = 1, totalslots do
+        local count = turtle.getItemCount(i)
+        -- print('Slot ', i, ' has ', count, ' items')
+        if count == 64 then
+            fullslots = fullslots + 1
+        end
+    end
+    for i = 1, totalslots do
+        local details = turtle.getItemDetail(i, true)
+        if details then
+            if allowed[details.name] ~= true then
+                turtle.select(i)
+                turtle.drop(turtle.getItemCount(i))
+            end
+        end
+    end
+    print('Full slots: ', fullslots)
+    if fullslots == totalslots then
+        goBack()
+        local chest = peripheral.find("minecraft:chest")
+        if chest then
+            for i = 1, totalslots do
+                turtle.select(i)
+                turtle.dropDown(turtle.getItemCount(i))
+            end
+        end
+        goBack()
+    else
+        --Digging
+        if facing == 'n' then
+            z = z - 1
+            local z_file = fs.open('z.txt', 'w+')
+            z_file.write(z)
+            z_file.close()
+            digPattern()
+        end
+        if facing == 's' then
+            z = z + 1
+            local z_file = fs.open('z.txt', 'w+')
+            z_file.write(z)
+            z_file.close()
+            digPattern()
+        end
+        if facing == 'w' then
+            x = x - 1
+            local x_file = fs.open('x.txt', 'w+')
+            x_file.write(x)
+            x_file.close()
+            digPattern()
+        end
+        if facing == 'e' then
+            x = x + 1
+            local x_file = fs.open('x.txt', 'w+')
+            x_file.write(x)
+            x_file.close()
+            digPattern()
+        end
+    end
+end
