@@ -2,6 +2,9 @@
 --[[
     Create 3 files named accordingly to "x.txt", "y.txt", "z.txt", "facing.txt",
     "old_x.txt", "old_y.txt", "old_z.txt", "old_facing.txt"
+
+    x,y,z is original position
+    x_dest, y_dest, z_dest is destination position
 ]]
 
 local position = { ... }
@@ -49,7 +52,6 @@ end
 x = tonumber(x)
 y = tonumber(y)
 z = tonumber(z)
-print(x, y, z, facing)
 
 --## Goto
 local x_dest = tonumber(position[5])
@@ -79,7 +81,7 @@ local function turnRight()
     right()
 end
 
-function goToX(dest)
+local function goToX(dest)
     --## Save x
     local old_x_file = fs.open('old_x.txt', 'w+')
     old_x_file.write(x)
@@ -120,7 +122,7 @@ function goToX(dest)
     facing_file.close()
 end
 
-function goToY(dest)
+local function goToY(dest)
     --## Save y
     local old_y_file = fs.open('old_y.txt', 'w+')
     old_y_file.write(y)
@@ -147,7 +149,7 @@ function goToY(dest)
     facing_file.close()
 end
 
-function goToZ(dest)
+local function goToZ(dest)
     --## Save z
     local old_z_file = fs.open('old_z.txt', 'w+')
     old_z_file.write(z)
@@ -188,13 +190,31 @@ function goToZ(dest)
     facing_file.close()
 end
 
-function goTo()
+local function old_facing_save()
     local old_facing_file = fs.open('old_facing.txt', 'w+')
     old_facing_file.write(facing)
     old_facing_file.close()
+end
+
+local function goTo()
+    old_facing_save()
     goToX(x_dest)
     goToZ(z_dest)
     goToY(y_dest)
 end
 
-goTo()
+local function goBack()
+    x = tonumber(fs.open('x.txt', 'r').readAll())
+    y = tonumber(fs.open('y.txt', 'r').readAll())
+    z = tonumber(fs.open('z.txt', 'r').readAll())
+    x_dest = tonumber(fs.open('old_x.txt', 'r').readAll())
+    y_dest = tonumber(fs.open('old_y.txt', 'r').readAll())
+    z_dest = tonumber(fs.open('old_z.txt', 'r').readAll())
+    goToX(x_dest)
+    goToZ(z_dest)
+    goToY(y_dest)
+    while facing ~= fs.open('old_facing.txt', 'r').readAll() do
+        turnLeft()
+    end
+    print('Arrived at original position: ', x_dest, y_dest, z_dest, facing)
+end
