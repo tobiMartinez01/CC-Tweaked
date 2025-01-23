@@ -54,5 +54,18 @@ x = tonumber(x)
 y = tonumber(y)
 z = tonumber(z)
 
-print(x, y, z, facing)
+--## Goto
+local forward = turtle.forward
+local back = turtle.back
+local left = turtle.turnLeft
+local right = turtle.turnRight
+
+local function goToX(dest)
+    if x > dest then
+        while facing ~= 'w' do
+            facing = next(facings, facings[facing])
+            right()
+        end
+    end
+end
 
