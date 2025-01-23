@@ -83,9 +83,6 @@ function goToX(dest)
     local old_x_file = fs.open('old_x.txt', 'w+')
     old_x_file.write(x)
     old_x_file.close()
-    local old_facing_file = fs.open('old_facing.txt', 'w+')
-    old_facing_file.write(facing)
-    old_facing_file.close()
     if x > dest then
         while facing ~= 'w' do
             if facing == 'n' then
@@ -127,9 +124,6 @@ function goToY(dest)
     local old_y_file = fs.open('old_y.txt', 'w+')
     old_y_file.write(y)
     old_y_file.close()
-    local old_facing_file = fs.open('old_facing.txt', 'w+')
-    old_facing_file.write(facing)
-    old_facing_file.close()
     if y > dest then
         while y > dest do
             y = y - 1
@@ -157,9 +151,6 @@ function goToZ(dest)
     local old_z_file = fs.open('old_z.txt', 'w+')
     old_z_file.write(z)
     old_z_file.close()
-    local old_facing_file = fs.open('old_facing.txt', 'w+')
-    old_facing_file.write(facing)
-    old_facing_file.close()
     if z > dest then
         while facing ~= 'n' do
             if facing == 'e' then
@@ -196,6 +187,13 @@ function goToZ(dest)
     facing_file.close()
 end
 
-goToX(x_dest)
-goToZ(z_dest)
-goToY(y_dest)
+function goTo()
+    local old_facing_file = fs.open('old_facing.txt', 'w+')
+    old_facing_file.write(facing)
+    old_facing_file.close()
+    goToX(x_dest)
+    goToZ(z_dest)
+    goToY(y_dest)
+end
+
+goTo()
