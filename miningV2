@@ -37,10 +37,10 @@ if x and y and z then
     facing_file.close()
 else
     print('Restoring last position!')
-    local old_x = find('x.txt')
-    local old_y = find('y.txt')
-    local old_z = find('z.txt')
-    local old_facing = find('facing.txt')
+    local old_x = fs.find('x.txt')
+    local old_y = fs.find('y.txt')
+    local old_z = fs.find('z.txt')
+    local old_facing = fs.find('facing.txt')
     if old_x and old_y and old_z then
         x = old_x
         y = old_y
