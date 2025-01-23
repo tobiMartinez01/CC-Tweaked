@@ -4,6 +4,7 @@
 ]]
 
 local x, y, z = { ... }
+print(x, y, z)
 if x and y and z then
     print(x, y, z)
 else
