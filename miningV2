@@ -42,10 +42,10 @@ else
     local old_z = fs.find('z.txt')
     local old_facing = fs.find('facing.txt')
     if old_x and old_y and old_z then
-        x = fs.open('x.txt'. 'r').readAll()
-        y = fs.open('y.txt'. 'r').readAll()
-        z = fs.open('z.txt'. 'r').readAll()
-        facing = fs.open('facing.txt'. 'r').readAll()
+        x = fs.open('x.txt', 'r').readAll()
+        y = fs.open('y.txt', 'r').readAll()
+        z = fs.open('z.txt', 'r').readAll()
+        facing = fs.open('facing.txt', 'r').readAll()
     end
 end
 
