@@ -7,6 +7,21 @@
     x_dest, y_dest, z_dest is destination position
 ]]
 
+local allowed = {
+    ['minecraft:dirt'] = true,
+    ['minecraft:gravel'] = true,
+    ['minecraft:andesite'] = true,
+    ['minecraft:redstone'] = true,
+    ['minecraft:coal'] = true,
+    ['minecraft:diamond'] = true,
+    ['minecraft:raw_iron'] = true,
+    ['minecraft:raw_gold'] = true,
+    ['minecraft:raw_copper'] = true,
+    ['minecraft:emerald'] = true,
+    ['create:raw_zinc'] = true,
+    ['create_dd:raw_tin'] = true
+}
+
 local position = { ... }
 local x = position[1]
 local y = position[2]
@@ -271,18 +286,6 @@ local function toboolean(string)
         return false
     end
 end
-
-local allowed = {
-    ['minecraft:redstone'] = true,
-    ['minecraft:coal'] = true,
-    ['minecraft:diamond'] = true,
-    ['minecraft:raw_iron'] = true,
-    ['minecraft:raw_gold'] = true,
-    ['minecraft:raw_copper'] = true,
-    ['minecraft:emerald'] = true,
-    ['create:raw_zinc'] = true,
-    ['create_dd:raw_tin'] = true
-}
 
 local totalslots = 16
 
