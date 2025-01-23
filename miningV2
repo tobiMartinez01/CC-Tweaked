@@ -273,7 +273,6 @@ local function toboolean(string)
 end
 
 local allowed = {
-    ['minecraft:cobblestone'] = true,
     ['minecraft:redstone'] = true,
     ['minecraft:coal'] = true,
     ['minecraft:diamond'] = true,
